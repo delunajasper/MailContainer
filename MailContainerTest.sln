@@ -12,6 +12,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailContainerTest.Tests", "MailContainerTest.Tests\MailContainerTest.Tests.csproj", "{316578EC-C391-4609-B5EE-F68C58023338}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{27E4E611-B6B3-47C9-A0BB-D6BC17F23512}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{31AB88C3-C1E6-4A18-9A5D-0A489FFF1123}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,5 +36,9 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {65E92BCE-13A0-4598-9892-E0C2C0D0E6CD}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5EA53851-F58C-4A2D-A730-262C38FD40BE} = {27E4E611-B6B3-47C9-A0BB-D6BC17F23512}
+		{316578EC-C391-4609-B5EE-F68C58023338} = {31AB88C3-C1E6-4A18-9A5D-0A489FFF1123}
 	EndGlobalSection
 EndGlobal

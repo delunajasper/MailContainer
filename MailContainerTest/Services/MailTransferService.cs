@@ -25,50 +25,7 @@ namespace MailContainerTest.Services
 
             var result = new MakeMailTransferResult();
 
-            switch (request.MailType)
-            {
-                case MailType.StandardLetter:
-                    if (mailContainer == null)
-                    {
-                        result.Success = false;
-                    }
-                    else if (!mailContainer.AllowedMailType.HasFlag(AllowedMailType.StandardLetter))
-                    {
-                        result.Success = false;
-                    }
-                    break;
-
-                case MailType.LargeLetter:
-                    if (mailContainer == null)
-                    {
-                        result.Success = false;
-                    }
-                    else if (!mailContainer.AllowedMailType.HasFlag(AllowedMailType.LargeLetter))
-                    {
-                        result.Success = false;
-                    }
-                    else if (mailContainer.Capacity < request.NumberOfMailItems)
-                    {
-                        result.Success = false;
-                    }
-                    break;
-
-                case MailType.SmallParcel:
-                    if (mailContainer == null)
-                    {
-                        result.Success = false;
-                    }
-                    else if (!mailContainer.AllowedMailType.HasFlag(AllowedMailType.SmallParcel))
-                    {
-                        result.Success = false;
-
-                    }
-                    else if (mailContainer.Status != MailContainerStatus.Operational)
-                    {
-                        result.Success = false;
-                    }
-                    break;
-            }
+            MailValidator(request, mailContainer, result);
 
             if (result.Success)
             {
@@ -88,6 +45,51 @@ namespace MailContainerTest.Services
             }
 
             return result;
+        }
+
+        private static void MailValidator(MakeMailTransferRequest request, MailContainer mailContainer,
+            MakeMailTransferResult result)
+        {   
+            switch (request.MailType)
+            {
+                case MailType.StandardLetter:
+                    if (mailContainer == null)
+                    {
+                        result.Success = false;
+                    }
+                    else if (!mailContainer.AllowedMailType.HasFlag(AllowedMailType.StandardLetter))
+                    {
+                        result.Success = false;
+                    }
+
+                    break;
+
+                case MailType.LargeLetter:
+                    if (!mailContainer.AllowedMailType.HasFlag(AllowedMailType.LargeLetter))
+                    {
+                        result.Success = false;
+                    }
+                    else if (mailContainer.Capacity < request.NumberOfMailItems)
+                    {
+                        result.Success = false;
+                    }
+
+                    break;
+
+                case MailType.SmallParcel:
+                    if (!mailContainer.AllowedMailType.HasFlag(AllowedMailType.SmallParcel))
+                    {
+                        result.Success = false;
+                    }
+                    else if (mailContainer.Status != MailContainerStatus.Operational)
+                    {
+                        result.Success = false;
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }
