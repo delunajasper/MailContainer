@@ -6,90 +6,36 @@ namespace MailContainerTest.Services
 {
     public class MailTransferService : IMailTransferService
     {
+        private readonly IMailChecker _checker;
+        private readonly IDataStore _dataStore;
+        public MailTransferService(IDataStore dataStore, IMailChecker checker)
+        {
+            _dataStore = dataStore;
+            _checker = checker;
+        }
         public MakeMailTransferResult MakeMailTransfer(MakeMailTransferRequest request)
         {
-            var dataStoreType = ConfigurationManager.AppSettings["DataStoreType"];
-
-            MailContainer mailContainer = null;
-
-            if (dataStoreType == "Backup")
+            var result = new MakeMailTransferResult
             {
-                var mailContainerDataStore = new BackupMailContainerDataStore();
-                mailContainer = mailContainerDataStore.GetMailContainer(request.SourceMailContainerNumber);
+                Success = false,
+            };
 
-            } else
+            try
             {
-                var mailContainerDataStore = new MailContainerDataStore();
-                mailContainer = mailContainerDataStore.GetMailContainer(request.SourceMailContainerNumber);
-            }
-
-            var result = new MakeMailTransferResult();
-
-            MailValidator(request, mailContainer, result);
-
-            if (result.Success)
-            {
-                mailContainer.Capacity -= request.NumberOfMailItems;
-
-                if (dataStoreType == "Backup")
+                var mailDataStore = _dataStore.GetMailContainer(request.SourceMailContainerNumber);
+                if (_checker.IsValid(mailDataStore, request))
                 {
-                    var mailContainerDataStore = new BackupMailContainerDataStore();
-                    mailContainerDataStore.UpdateMailContainer(mailContainer);
-
-                }
-                else
-                {
-                    var mailContainerDataStore = new MailContainerDataStore();
-                    mailContainerDataStore.UpdateMailContainer(mailContainer);
+                    _dataStore.UpdateMailContainer(mailDataStore);
+                    result.Success = true;
                 }
             }
-
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
             return result;
-        }
-
-        private static void MailValidator(MakeMailTransferRequest request, MailContainer mailContainer,
-            MakeMailTransferResult result)
-        {   
-            switch (request.MailType)
-            {
-                case MailType.StandardLetter:
-                    if (mailContainer == null)
-                    {
-                        result.Success = false;
-                    }
-                    else if (!mailContainer.AllowedMailType.HasFlag(AllowedMailType.StandardLetter))
-                    {
-                        result.Success = false;
-                    }
-
-                    break;
-
-                case MailType.LargeLetter:
-                    if (!mailContainer.AllowedMailType.HasFlag(AllowedMailType.LargeLetter))
-                    {
-                        result.Success = false;
-                    }
-                    else if (mailContainer.Capacity < request.NumberOfMailItems)
-                    {
-                        result.Success = false;
-                    }
-
-                    break;
-
-                case MailType.SmallParcel:
-                    if (!mailContainer.AllowedMailType.HasFlag(AllowedMailType.SmallParcel))
-                    {
-                        result.Success = false;
-                    }
-                    else if (mailContainer.Status != MailContainerStatus.Operational)
-                    {
-                        result.Success = false;
-                    }
-
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
         }
     }
 }
