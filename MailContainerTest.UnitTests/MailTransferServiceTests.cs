@@ -25,7 +25,8 @@ public class MailTransferServiceTests
         var request = new MakeMailTransferRequest
         {
             MailType = MailType.SmallParcel,
-            SourceMailContainerNumber = mailNumber
+            SourceMailContainerNumber = mailNumber,
+            TransferDate = DateTime.Today
         };
 
         var mailContainer = new MailContainer
@@ -59,7 +60,9 @@ public class MailTransferServiceTests
         {
             MailType = MailType.LargeLetter,
             NumberOfMailItems = 4,
-            SourceMailContainerNumber = mailNumber
+            SourceMailContainerNumber = mailNumber,
+            DestinationMailContainerNumber = "12345",
+            TransferDate = DateTime.UtcNow
         };
 
         var mailContainer = new MailContainer
@@ -91,7 +94,8 @@ public class MailTransferServiceTests
         var request = new MakeMailTransferRequest
         {
             MailType = MailType.StandardLetter,
-            SourceMailContainerNumber = mailNumber
+            SourceMailContainerNumber = mailNumber,
+            TransferDate = DateTime.Today
         };
 
         var mailContainer = new MailContainer

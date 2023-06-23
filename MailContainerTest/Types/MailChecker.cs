@@ -6,25 +6,14 @@ public class MailChecker : IMailChecker
 {
     public bool IsValid(MailContainer? mailContainer, MakeMailTransferRequest? request)
     {
-        if (mailContainer is null)
+        return request != null && mailContainer != null && request.MailType 
+            switch
         {
-            return false;
-        }
-
-        if (request is null) return false;
-        switch (request.MailType)
-        {
-            case MailType.StandardLetter:
-                return StandardLetter(mailContainer);
-                    
-            case MailType.LargeLetter:
-                return LargeLetter(mailContainer, request.NumberOfMailItems);
-                    
-            case MailType.SmallParcel:
-                return SmallParcel(mailContainer);
-        }
-
-        return false;
+            MailType.StandardLetter => StandardLetter(mailContainer),
+            MailType.LargeLetter => LargeLetter(mailContainer, request.NumberOfMailItems),
+            MailType.SmallParcel => SmallParcel(mailContainer),
+            _ => false
+        };
     }
 
     private bool SmallParcel(MailContainer mailContainer)
