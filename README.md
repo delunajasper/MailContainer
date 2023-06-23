@@ -13,6 +13,6 @@ I got carried away and lost track of time. I took 2hrs 45 mins to get this worki
 #### Improvement
 
 - Add serilog for debugging
-- Create exception handler with a clear message of what went wrong.
+- Create exception handler with a clear message of what went wrong
 - write more tests to cover other happy paths and handle exception
-- 
+- Add configuration builder for back up mail and primary mail
