@@ -29,6 +29,7 @@ namespace MailContainerTest.Services
                     result.Success = true;
                 }
             }
+            //TODO add exception handler
             catch (Exception e)
             {
                 Console.WriteLine(e);
